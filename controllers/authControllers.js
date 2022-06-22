@@ -44,17 +44,10 @@ exports.signup = catchAsync(async (req, res, next) => {
 
   const url = `${req.protocol}://${req.get("host")}/me`;
 
-  // await new Email(newUser, url).sendWelcome();
+  await new Email(newUser, url).sendWelcome();
 
   createSendToken(newUser, 201, req, res);
 });
-// exports.logout = (req, res) => {
-//     res.cookie('jwt', 'loggedout', {
-//       expires: new D ate(Date.now() + 10 * 1000),
-//       httpOnly: true
-//     });
-//     res.status(200).json({ status: 'success' });
-//   };
 
 exports.login = catchAsync(async (req, res, next) => {
   const { email, password } = req.body;

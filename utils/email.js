@@ -11,18 +11,18 @@ module.exports = class Email {
   }
 
   newTransport() {
-    // if (process.env.NODE_ENV === "production") {
-    //   console.log(process.env.SENDGRID_USERNAME);
-    //   console.log(process.env.SENDGRID_PASSWORD);
-    //   // Sendgrid
-    //   return nodemailer.createTransport({
-    //     service: "SendGrid",
-    //     auth: {
-    //       user: process.env.SENDGRID_USERNAME,
-    //       pass: process.env.SENDGRID_PASSWORD,
-    //     },
-    //   });
-    // }
+    if (process.env.NODE_ENV === "production") {
+      console.log(process.env.SENDGRID_USERNAME);
+      console.log(process.env.SENDGRID_PASSWORD);
+      // Sendgrid
+      return nodemailer.createTransport({
+        service: "SendGrid",
+        auth: {
+          user: process.env.SENDGRID_USERNAME,
+          pass: process.env.SENDGRID_PASSWORD,
+        },
+      });
+    }
 
     return nodemailer.createTransport({
       host: process.env.EMAIL_HOST,
@@ -57,7 +57,7 @@ module.exports = class Email {
   }
 
   async sendWelcome() {
-    await this.send("welcome", "Welcome to the Natours Family!");
+    await this.send("welcome", "Welcome to the Roar Family!");
   }
 
   async sendPasswordReset() {
