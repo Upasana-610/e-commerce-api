@@ -76,7 +76,7 @@ app.use(
 app.use(compression());
 
 // 3) ROUTES
-app.use("/", UserRouter);
+// app.use("/", UserRouter);
 app.use("/api/v1/navad", navAdRouter);
 app.use("/api/v1/adimg", SlidingAdRouter);
 app.use("/api/v1/product", productRouter);
