@@ -18,6 +18,7 @@ const SlidingAdRouter = require("./routes/SlidingAdImgRoutes");
 const productRouter = require("./routes/productRoutes");
 const categoryRouter = require("./routes/categoryRoutes");
 const UserRouter = require("./routes/userRoutes");
+const ViewRouter = require("./routes/viewRoutes");
 
 const app = express();
 
@@ -76,7 +77,7 @@ app.use(
 app.use(compression());
 
 // 3) ROUTES
-// app.use("/", UserRouter);
+app.use("/", ViewRouter);
 app.use("/api/v1/navad", navAdRouter);
 app.use("/api/v1/adimg", SlidingAdRouter);
 app.use("/api/v1/product", productRouter);
