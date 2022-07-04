@@ -83,12 +83,12 @@ app.use("/api/v1/adimg", SlidingAdRouter);
 app.use("/api/v1/product", productRouter);
 app.use("/api/v1/category", categoryRouter);
 
-const limiter = rateLimit({
-  max: 100,
-  windowMs: 60 * 60 * 1000,
-  message: "Too many requests from this IP, please try again in an hour!",
-});
-app.use("/api", limiter);
+// const limiter = rateLimit({
+//   max: 100,
+//   windowMs: 60 * 60 * 1000,
+//   message: "Too many requests from this IP, please try again in an hour!",
+// });
+// app.use("/api", limiter);
 app.use("/api/v1/users", UserRouter);
 
 // if (process.env.NODE_ENV === "production") {
