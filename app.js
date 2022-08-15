@@ -1,5 +1,7 @@
 const path = require("path");
 const express = require("express");
+const fileUpload = require("express-fileupload");
+
 const morgan = require("morgan");
 const rateLimit = require("express-rate-limit");
 const helmet = require("helmet");
@@ -13,20 +15,20 @@ const cors = require("cors");
 
 const AppError = require("./utils/appError");
 const globalErrorHandler = require("./controllers/errorController");
-const navAdRouter = require("./routes/navAdRoutes");
+
 const SlidingAdRouter = require("./routes/SlidingAdImgRoutes");
 const productRouter = require("./routes/productRoutes");
 const categoryRouter = require("./routes/categoryRoutes");
 const UserRouter = require("./routes/userRoutes");
 const ViewRouter = require("./routes/viewRoutes");
-
+const bookingRouter = require("./routes/bookingRoutes");
 const app = express();
 
 app.enable("trust proxy");
 
 // app.set("view engine", "pug");
 // app.set("views", path.join(__dirname, "views"));
-
+app.use(fileUpload());
 app.use(cors());
 
 app.options("*", cors());
@@ -78,10 +80,11 @@ app.use(compression());
 
 // 3) ROUTES
 app.use("/", ViewRouter);
-app.use("/api/v1/navad", navAdRouter);
+
 app.use("/api/v1/adimg", SlidingAdRouter);
 app.use("/api/v1/product", productRouter);
 app.use("/api/v1/category", categoryRouter);
+app.use("/api/v1/bookings", bookingRouter);
 
 // const limiter = rateLimit({
 //   max: 100,

@@ -32,15 +32,19 @@ const upload = multer({
 exports.uploadUserPhoto = upload.single("photo");
 
 exports.resizeUserPhoto = catchAsync(async (req, res, next) => {
+  console.log(req.file);
   if (!req.file) return next();
 
-  req.file.filename = `user-${req.user.id}-${Date.now()}.jpeg`;
+  console.log(req.file.filename);
+  // req.file.filename = `user-${req.user.id}-${Date.now()}.jpeg`;
+  req.file.filename = `user-${Math.floor(Math.random() * 21 + 1)}.jpg`;
 
   await sharp(req.file.buffer)
     .resize(500, 500)
-    .toFormat("jpeg")
+    .toFormat("jpg")
     .jpeg({ quality: 90 })
     .toFile(`public/img/users/${req.file.filename}`);
+  console.log("here");
 
   next();
 });

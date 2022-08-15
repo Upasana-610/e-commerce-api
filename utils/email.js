@@ -51,12 +51,14 @@ module.exports = class Email {
       html,
       text: htmlToText.fromString(html),
     };
-
+    console.log("here3");
     // 3) Create a transport and send email
     await this.newTransport().sendMail(mailOptions);
   }
 
   async sendWelcome() {
+    console.log("here1");
+
     await this.send("welcome", "Welcome to the Roar Family!");
   }
 
