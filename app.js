@@ -22,6 +22,8 @@ const categoryRouter = require("./routes/categoryRoutes");
 const UserRouter = require("./routes/userRoutes");
 const ViewRouter = require("./routes/viewRoutes");
 const bookingRouter = require("./routes/bookingRoutes");
+
+const bookingController = require("./controllers/bookingController");
 const app = express();
 
 app.enable("trust proxy");
@@ -41,19 +43,18 @@ if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
 }
 
+app.post(
+  "/webhook-checkout",
+  bodyParser.raw({ type: "application/json" }),
+  bookingController.webhookCreator
+);
+
 app.use(bodyParser.json());
 app.use(
   bodyParser.urlencoded({
     extended: true,
   })
 );
-
-// app.post(
-//   // "/webhook-checkout",
-//   "/api/v1/users/signup",
-//   bodyParser.raw({ type: "application/json" })
-//   // bookingController.webhookCheckout
-// );
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

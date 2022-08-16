@@ -1,6 +1,9 @@
 const Stripe = require("stripe");
+const Booking = require("../models/bookingModel");
+const User = require("../models/userModel");
 const catchAsync = require("../utils/catchAsync");
 const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
+const factory = require("./handlerFactory");
 
 exports.getCheckoutSession = catchAsync(async (req, res) => {
   const line_items = req.body.cartItems.map((item) => {
@@ -15,10 +18,25 @@ exports.getCheckoutSession = catchAsync(async (req, res) => {
             id: item.id,
           },
         },
-        unit_amount: item.product.pPrice * 100,
+        unit_amount: item.product.pPrice * 148,
       },
       quantity: item.qty,
     };
+  });
+
+  const customer = await stripe.customers.create({
+    metadata: {
+      userId: req.body.userId,
+      cart: JSON.stringify(
+        req.body.cartItems.map((item) => {
+          return {
+            productId: item.product.id,
+            size: item.selected,
+            qty: item.qty,
+          };
+        })
+      ),
+    },
   });
   const session = await stripe.checkout.sessions.create({
     payment_method_types: ["card"],
@@ -72,6 +90,7 @@ exports.getCheckoutSession = catchAsync(async (req, res) => {
     phone_number_collection: {
       enabled: true,
     },
+    customer: customer.id,
     line_items,
     mode: "payment",
     success_url: `${req.body.clienturl}/`,
@@ -80,3 +99,59 @@ exports.getCheckoutSession = catchAsync(async (req, res) => {
 
   res.send({ url: session.url });
 });
+
+const createBookingCheckout = async (data, customer) => {
+  const product = JSON.parse(customer.metadata.cart).map((item) => item);
+  const user = (await User.findOne({ email: customer.email })).id;
+  const total_price = data.amount_subtotal / 100;
+  await Booking.create({ product, user, total_price });
+};
+
+// Stripe webhook
+// This is your Stripe CLI webhook secret for testing your endpoint locally.
+let endpointSecret;
+
+endpointSecret =
+  "whsec_a996c8bf2107363ef73004abbebe191fde315140a7496bc1b3eb3d9527946f76";
+
+exports.webhookCreator = (req, res) => {
+  const sig = req.headers["stripe-signature"];
+
+  let data;
+  let eventType;
+
+  if (endpointSecret) {
+    let event;
+
+    try {
+      event = stripe.webhooks.constructEvent(req.body, sig, endpointSecret);
+      console.log("Webhook-Verified");
+    } catch (err) {
+      console.log(`Webhook Error: ${err.message}`);
+      res.status(400).send(`Webhook Error: ${err.message}`);
+      return;
+    }
+    data = event.data.object;
+    eventType = event.type;
+  } else {
+    data = req.body.data.object;
+    eventType = req.body.type;
+  }
+
+  // Handle the event
+  if (eventType === "checkout.session.completed") {
+    stripe.customers
+      .retrieve(data.customer)
+      .then((customer) => {
+        createBookingCheckout(data, customer);
+        // console.log(customer);
+        // console.log("data:", data);
+      })
+      .catch((err) => console.log(err.message));
+  }
+
+  // Return a 200 res to acknowledge receipt of the event
+  res.status(200).json({ received: true });
+};
+
+exports.getBooking = factory.getOne(Booking);
