@@ -111,8 +111,7 @@ const createBookingCheckout = async (data, customer) => {
 // This is your Stripe CLI webhook secret for testing your endpoint locally.
 let endpointSecret;
 
-endpointSecret =
-  "whsec_a996c8bf2107363ef73004abbebe191fde315140a7496bc1b3eb3d9527946f76";
+endpointSecret = "whsec_7rLE5ZR2yOzweJ7cGhIoWnsFfMWBNeiY";
 
 exports.webhookCreator = (req, res) => {
   const sig = req.headers["stripe-signature"];
@@ -127,8 +126,8 @@ exports.webhookCreator = (req, res) => {
       event = stripe.webhooks.constructEvent(req.body, sig, endpointSecret);
       console.log("Webhook-Verified");
     } catch (err) {
-      console.log(`Webhook Error: ${err.message}`);
-      res.status(400).send(`Webhook Error: ${err.message}`);
+      console.log(`Webhook Roar Error: ${err.message}`);
+      res.status(400).send(`Webhook Roar Error: ${err.message}`);
       return;
     }
     data = event.data.object;
@@ -144,8 +143,8 @@ exports.webhookCreator = (req, res) => {
       .retrieve(data.customer)
       .then((customer) => {
         createBookingCheckout(data, customer);
-        // console.log(customer);
-        // console.log("data:", data);
+        console.log(customer);
+        console.log("data:", data);
       })
       .catch((err) => console.log(err.message));
   }

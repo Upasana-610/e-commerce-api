@@ -44,7 +44,7 @@ if (process.env.NODE_ENV === "development") {
 }
 
 app.post(
-  "/webhook-checkout",
+  "/webhook",
   bodyParser.raw({ type: "application/json" }),
   bookingController.webhookCreator
 );
