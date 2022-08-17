@@ -127,6 +127,18 @@ exports.cartadd = catchAsync(async (req, res) => {
   });
 });
 
+exports.cartempty = catchAsync(async (req, res) => {
+  const updatedUser = await User.findByIdAndUpdate(req.body.userid, {
+    $set: { cart: [] },
+  });
+  res.status(200).json({
+    status: "success",
+    data: {
+      user: updatedUser,
+    },
+  });
+});
+
 exports.cartQty = catchAsync(async (req, res) => {
   console.log(req.body);
   const updatedUser = await User.updateOne(

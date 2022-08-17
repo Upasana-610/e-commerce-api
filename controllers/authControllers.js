@@ -73,6 +73,7 @@ exports.logout = (req, res) => {
 
 exports.protect = catchAsync(async (req, res, next) => {
   let token;
+  console.log(req.body);
 
   if (
     req.headers.authorization &&
@@ -112,7 +113,7 @@ exports.protect = catchAsync(async (req, res, next) => {
       new AppError("User recently changed password! Please log in again.", 401)
     );
   }
-  console.log(currentUser);
+
   // GRANT ACCESS TO PROTECTED ROUTE
   req.user = currentUser;
   res.locals.user = currentUser;

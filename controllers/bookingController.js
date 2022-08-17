@@ -154,3 +154,22 @@ exports.webhookCreator = (req, res) => {
 };
 
 exports.getBooking = factory.getOne(Booking);
+
+exports.getMyOrder = catchAsync(async (req, res, next) => {
+  console.log(req.user);
+  let orders;
+  orders = await Booking.find({ user: req.user.id });
+  // if (popOptions) query = query.populate(popOptions);
+
+  if (!orders) {
+    return next(new AppError("No Order Made", 404));
+  }
+
+  res.status(200).json({
+    status: "success",
+    data: {
+      length: orders.length,
+      data: orders,
+    },
+  });
+});

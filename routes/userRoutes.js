@@ -15,6 +15,7 @@ router.patch("/resetPassword/:token", authController.resetPassword);
 router.put("/cartadd", userController.cartadd);
 router.put("/cartqty", userController.cartQty);
 router.put("/cartdel", userController.cartDel);
+router.put("/cartempty", userController.cartempty);
 // Protect all routes after this middleware
 router.use(authController.protect);
 
