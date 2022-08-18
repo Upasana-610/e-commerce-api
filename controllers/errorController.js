@@ -58,8 +58,7 @@ const sendErrorProd = (err, req, res) => {
     // 2) Send generic message
     return res.status(500).json({
       status: "error",
-      message: "Something went very very wrong!",
-      err: err,
+      message: "Something went very wrong!",
     });
   }
 
@@ -69,7 +68,6 @@ const sendErrorProd = (err, req, res) => {
     return res.status(err.statusCode).render("error", {
       title: "Something went wrong!",
       msg: err.message,
-      err: err.msg,
     });
   }
   // B) Programming or other unknown error: don't leak error details
@@ -79,7 +77,6 @@ const sendErrorProd = (err, req, res) => {
   return res.status(err.statusCode).render("error", {
     title: "Something went wrong!",
     msg: "Please try again later.",
-    err: err.msg,
   });
 };
 
@@ -101,7 +98,7 @@ module.exports = (err, req, res, next) => {
       error = handleValidationErrorDB(error);
     if (error.name === "JsonWebTokenError") error = handleJWTError();
     if (error.name === "TokenExpiredError") error = handleJWTExpiredError();
-
-    sendErrorProd(err, req, res);
+    sendErrorDev(err, req, res);
+    // sendErrorProd(error, req, res);
   }
 };
