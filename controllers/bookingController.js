@@ -2,7 +2,7 @@ const Stripe = require("stripe");
 const Booking = require("../models/bookingModel");
 const User = require("../models/userModel");
 const catchAsync = require("../utils/catchAsync");
-const stripe = Stripe(process.env.STRIPE_PUBLIC_KEY);
+const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
 const factory = require("./handlerFactory");
 
 const cartEmpty = async (userid) => {
