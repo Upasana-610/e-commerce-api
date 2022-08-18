@@ -129,8 +129,7 @@ let endpointSecret;
 
 // whsec_7rLE5ZR2yOzweJ7cGhIoWnsFfMWBNeiY
 
-endpointSecret =
-  "whsec_a996c8bf2107363ef73004abbebe191fde315140a7496bc1b3eb3d9527946f76";
+endpointSecret = "whsec_7rLE5ZR2yOzweJ7cGhIoWnsFfMWBNeiY";
 
 exports.webhookCreator = (req, res) => {
   const sig = req.headers["stripe-signature"];
