@@ -2,8 +2,18 @@ const Stripe = require("stripe");
 const Booking = require("../models/bookingModel");
 const User = require("../models/userModel");
 const catchAsync = require("../utils/catchAsync");
-const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
+const stripe = Stripe(process.env.STRIPE_PUBLIC_KEY);
 const factory = require("./handlerFactory");
+
+const cartEmpty = async (userid) => {
+  try {
+    await User.findByIdAndUpdate(userid, {
+      $set: { cart: [] },
+    });
+  } catch (err) {
+    console.log(err.message);
+  }
+};
 
 exports.getCheckoutSession = catchAsync(async (req, res) => {
   const line_items = req.body.cartItems.map((item) => {
@@ -101,17 +111,26 @@ exports.getCheckoutSession = catchAsync(async (req, res) => {
 });
 
 const createBookingCheckout = async (data, customer) => {
+  console.log(customer.metadata.userId);
   const product = JSON.parse(customer.metadata.cart).map((item) => item);
-  const user = (await User.findOne({ email: customer.email })).id;
+  const user = (await User.findById(customer.metadata.userId))._id;
+  console.log(user, "hello");
   const total_price = data.amount_subtotal / 100;
+
   await Booking.create({ product, user, total_price });
+  await cartEmpty(customer.metadata.userId);
 };
 
 // Stripe webhook
 // This is your Stripe CLI webhook secret for testing your endpoint locally.
 let endpointSecret;
 
-endpointSecret = "whsec_7rLE5ZR2yOzweJ7cGhIoWnsFfMWBNeiY";
+// whsec_a996c8bf2107363ef73004abbebe191fde315140a7496bc1b3eb3d9527946f76
+
+// whsec_7rLE5ZR2yOzweJ7cGhIoWnsFfMWBNeiY
+
+endpointSecret =
+  "whsec_a996c8bf2107363ef73004abbebe191fde315140a7496bc1b3eb3d9527946f76";
 
 exports.webhookCreator = (req, res) => {
   const sig = req.headers["stripe-signature"];

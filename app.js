@@ -23,6 +23,8 @@ const UserRouter = require("./routes/userRoutes");
 const ViewRouter = require("./routes/viewRoutes");
 const bookingRouter = require("./routes/bookingRoutes");
 
+const authController = require("./controllers/authControllers");
+
 const bookingController = require("./controllers/bookingController");
 const app = express();
 
@@ -46,6 +48,7 @@ if (process.env.NODE_ENV === "development") {
 app.post(
   "/webhook",
   bodyParser.raw({ type: "application/json" }),
+
   bookingController.webhookCreator
 );
 

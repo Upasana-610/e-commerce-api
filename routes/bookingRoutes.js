@@ -7,6 +7,8 @@ router.route("/orderbybooking/:id").get(bookingController.getBooking);
 
 router.use(authController.protect);
 
+router.route("/orderbybooking/:id").get(bookingController.getBooking);
+
 router.post("/create-checkout-session", bookingController.getCheckoutSession);
 router.get("/myorder", bookingController.getMyOrder);
 
