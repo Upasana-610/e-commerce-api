@@ -34,7 +34,7 @@ const sendErrorDev = (err, req, res) => {
 
   // B) RENDERED WEBSITE
   console.error("ERROR 💥", err);
-  return res.status(err.statusCode).json({
+  return res.status(200).json({
     text: "WRONG",
     status: err.status,
     error: err,
