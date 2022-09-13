@@ -8,6 +8,7 @@ exports.createCategory = factory.createOne(Category);
 exports.getAllCategory = factory.getAll(Category);
 
 exports.getCategory = catchAsync(async (req, res, next) => {
+  console.log("first");
   let query = req.params.category;
   let data;
   let products;
@@ -37,18 +38,22 @@ exports.getCategory = catchAsync(async (req, res, next) => {
   });
 });
 
-// exports.getSubCategory = catchAsync(async (req, res, next) => {
-//   let query = req.params.Subcategory;
-//   console.log(query);
-//   const data = await Category.find({
-//     subcategories: { $elemMatch: { SubCategory: query } },
-//   }).pretty();
-//   const products = await Product.find({});
-//   console.log(products.length);
-//   res.status(200).json({
-//     status: "success",
-//     data: data,
-//   });
-// });
-
-// [{pCategory:ObjectId('6220d34727aacc4d306a406e')},{pCategory:ObjectId('6220d34727aacc4d306a4070')},{pCategory:ObjectId('6220d34727aacc4d306a406f')},{pCategory:ObjectId('6220d34727aacc4d306a406d')},{pCategory:ObjectId('6220d34727aacc4d306a4071')},{pCategory:ObjectId('6220d34727aacc4d306a4076')}]
+exports.getCategoryId = catchAsync(async (req, res, next) => {
+  console.log("first1");
+  let category = req.query.categoryid;
+  let subcategory = req.query.subcategoryid;
+  let data = [],
+    data2 = [];
+  console.log(category, subcategory);
+  data = await Category.find({ cName: category });
+  if (category === "Tshirts" || (category === "Shirts" && subcategory !== ""))
+    data2 = await Category.aggregate([
+      { $unwind: "$subcategories" },
+      { $match: { "subcategories.SubCategory": subcategory } },
+    ]);
+  res.status(200).json({
+    status: "success",
+    categoryId: data.length !== 0 ? data[0]._id : "",
+    subcategoryId: data2.length !== 0 ? data2[0].subcategories._id : "",
+  });
+});

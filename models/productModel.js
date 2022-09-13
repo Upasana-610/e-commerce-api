@@ -6,6 +6,7 @@ const productSchema = new mongoose.Schema(
     pName: {
       type: String,
       required: true,
+      unique: true,
     },
     pColor: {
       type: String,
@@ -44,10 +45,6 @@ const productSchema = new mongoose.Schema(
       required: true,
     },
     pWash: {
-      type: String,
-      required: true,
-    },
-    pEndLine: {
       type: String,
       required: true,
     },
@@ -94,6 +91,7 @@ const productSchema = new mongoose.Schema(
     pStatus: {
       type: String,
       required: true,
+      default: true,
     },
     pNewArrival: {
       type: Boolean,

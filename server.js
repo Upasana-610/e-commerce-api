@@ -20,6 +20,10 @@ mongoose
     useNewUrlParser: true,
     useCreateIndex: true,
     useFindAndModify: false,
+    useUnifiedTopology: true,
+    useNewUrlParser: true,
+    useCreateIndex: true, //make this true
+    autoIndex: true, //make this also true
   })
   .then(() => console.log("DB connection successful!"));
 
