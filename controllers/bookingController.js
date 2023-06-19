@@ -4,6 +4,7 @@ const User = require("../models/userModel");
 const catchAsync = require("../utils/catchAsync");
 const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
 const factory = require("./handlerFactory");
+const webhook = process.env.WEBHOOK_SECRET;
 
 const cartEmpty = async (userid) => {
   try {
@@ -129,9 +130,11 @@ let endpointSecret;
 
 // whsec_7rLE5ZR2yOzweJ7cGhIoWnsFfMWBNeiY
 
-endpointSecret = "whsec_7rLE5ZR2yOzweJ7cGhIoWnsFfMWBNeiY";
+endpointSecret = webhook;
 
 exports.webhookCreator = (req, res) => {
+  console.log("entered");
+
   const sig = req.headers["stripe-signature"];
 
   let data;
@@ -150,6 +153,7 @@ exports.webhookCreator = (req, res) => {
     }
     data = event.data.object;
     eventType = event.type;
+    console.log(eventType);
   } else {
     data = req.body.data.object;
     eventType = req.body.type;
