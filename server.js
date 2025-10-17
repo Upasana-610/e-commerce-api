@@ -34,8 +34,7 @@ const server = app.listen(port, () => {
 
 process.on("unhandledRejection", (err) => {
   console.log("UNHANDLED REJECTION! 💥 Shutting down...");
-  console.log("DATABASE:", process.env.DATABASE);
-  console.log("DATABASE_PASSWORD:", process.env.DATABASE_PASSWORD);
+  console.log("DATABASE:", DB);
   console.log(err.name, err.message);
   server.close(() => {
     process.exit(1);
